@@ -21,38 +21,11 @@ ui <- fluidPage(
                    series and receiving booster doses by state, age, and county.
                    The following description is to define each variable names used
                    in this set of data.\n"),
-                  p(strong("Series_Complete_Yes: "),
-                  em("Total number of people
-                      who have completed a primary series (have second dose of a 
-                      two-dose vaccine or one dose of a single-dose vaccine) 
-                     based on the jurisdiction and county where vaccine recipient lives.\n")),
-                  p(strong("Series_Complete_Pop_Pct: "),
-                  em("Percent of people who have completed a primary series
-                  (have second dose of a two-dose vaccine or one dose of
-                  a single-dose vaccine) based on the jurisdiction and county
-                  where vaccine recipient lives.\n")),
-                  p(strong("Series_Complete_5Plus: "),
-                  em("Total number of people ages 5+ who have completed a primary
-                     series (have second dose of a two-dose vaccine or one dose of
-                     a single-dose vaccine) based on the jurisdiction where
-                     recipient lives.\n")),
-                  p(strong("Booster_Doses: "),
-                   em("Total number of people who completed a primary series
-                      and have received a booster (or additional) dose.\n")),
-                  p(strong("Booster_Doses_Vax_Pct: "),
-                   em("Percent of people who completed a primary series and
-                      have received a booster (or additional) dose.\n")),
-                  p(strong("Booster_Doses_5Plus: "),
-                   em("Total number of people ages 5+ who completed a primary
-                      series and have received a booster (or additional) dose.\n")),
-                  p(strong("Booster_Doses_5Plus_Vax_Pct: "),
-                   em("Percent of people ages 5+ who completed a primary series
-                      and have received a booster (or additional) dose.\n")),
-                 p(strong("For those that contains "),em("Pct "),strong("means
-                  that the data is a percentage")),
-                 p(strong("For those that starts with"),em("Series_Complete or Booster_Doses"),
-                  strong("have similar definition as the ones listed above and the only
-                         difference is the age plus data"))
+                 p("There are ", nrow(covidvaccine),"rows and ",
+                   ncol(covidvaccine),"in this dataset"),
+                 p("We are only going to use 8 to 24 columns here\n"),
+                 dataTableOutput("sample")
+                 
                )
       ),
       tabPanel("Plot",
@@ -121,7 +94,10 @@ server <- function(input, output) {
       select(Recip_County, ends_with(input$age)) %>%
       drop_na()
   })
-
+  output$sample <- renderDataTable({
+    covidvaccine %>% 
+      sample_n(10)
+  })
   output$covidvaccine <- renderDataTable({
     tabs()
   })
